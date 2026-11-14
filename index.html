@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Yesid Recargas — Diamantes Free Fire al mejor precio</title>
+  <meta name="description" content="Recarga tus diamantes de Free Fire al mejor precio en Colombia. Entrega rápida, 100% seguro y pago por Nequi. ¡Compra fácil con Yesid!">
+  <meta name="keywords" content="diamantes free fire, recargas free fire, comprar diamantes colombia, nequi, yesid recargas, f7yesid">
+  <meta name="author" content="Yesid Recargas">
+  
+  <meta property="og:title" content="Yesid Recargas — Diamantes Free Fire">
+  <meta property="og:description" content="Los mejores precios en diamantes. 100% seguro y rápido.">
+  <meta property="og:type" content="website">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="theme-loader" id="themeLoader">
+    <div class="theme-loader-spinner"></div>
+  </div>
+
+  <header class="site-header" id="siteHeader">
+    <a href="#" class="logo-container">
+      <svg class="logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color: var(--neon-strong)" />
+            <stop offset="100%" style="stop-color: var(--neon)" />
+          </linearGradient>
+        </defs>
+        <circle cx="50" cy="50" r="46" fill="none" stroke="url(#logoGrad)" stroke-width="3"/>
+        <path d="M 25 35 L 35 20 L 50 30 L 65 20 L 75 35 Z" fill="url(#logoGrad)" />
+        <path d="M 35 45 L 45 60 L 45 75 L 55 75 L 55 60 L 65 45 L 52 45 L 50 55 L 48 45 Z" fill="#ffffff" />
+        <path d="M 58 45 L 58 75 L 66 75 L 66 63 L 72 75 L 80 75 L 73 60 C 78 58 80 53 78 48 C 75 45 70 45 65 45 Z M 66 51 L 70 51 C 72 51 73 52 73 54 C 73 56 72 57 70 57 L 66 57 Z" fill="#ffffff" />
+      </svg>
+      <div class="logo-text">YESID <span>RECARGAS</span></div>
+    </a>
+
+    <div class="header-controls">
+      <button class="btn-header" onclick="abrirModalGaleria()">👥 Clientes</button>
+      <button class="btn-header" onclick="abrirModalEventos()">🎁 Eventos</button>
+      
+      <div class="theme-selector" id="themeSelector">
+        <button class="theme-btn" onclick="toggleThemeDropdown(event)">🎨 Temas</button>
+        <div class="theme-dropdown" id="themeDropdown">
+          <div class="theme-option active" data-theme="purple" onclick="seleccionarTema('purple')"><span><span class="color-dot dot-purple"></span>Morado</span> <span class="check">✓</span></div>
+          <div class="theme-option" data-theme="blue" onclick="seleccionarTema('blue')"><span><span class="color-dot dot-blue"></span>Azul / Cian</span> <span class="check" style="display:none">✓</span></div>
+          <div class="theme-option" data-theme="orange" onclick="seleccionarTema('orange')"><span><span class="color-dot dot-orange"></span>Amarillo / Naranja</span> <span class="check" style="display:none">✓</span></div>
+          <div class="theme-option" data-theme="pink" onclick="seleccionarTema('pink')"><span><span class="color-dot dot-pink"></span>Rosado / Rojo</span> <span class="check" style="display:none">✓</span></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>Recarga tus <em>Diamantes Free Fire</em><br>al mejor precio</h1>
+      <br>
+      <a href="#precios" class="btn btn-primary btn-lg">Ver paquetes</a>
+    </section>
+
+    <div class="stats-banner reveal">
+      <p class="stat-message">
+        SIEMPRE HABLAS CON YESID<br>100% MANUAL Y SEGURO
+      </p>
+    </div>
+
+    <div class="payment-section reveal">
+      <p class="payment-title">Método de pago aceptado</p>
+      <div class="payment-methods">
+        <div class="payment-pill">💜 Nequi</div>
+      </div>
+    </div>
+
+    <section id="precios" class="section">
+      <h2 class="section-title">Paquetes de diamantes</h2>
+      
+      <div class="id-container" id="idContainer">
+        <h3 class="id-title">Paso 1: Ingresa tu ID de Free Fire</h3>
+        
+        <div class="id-input-group">
+          <input type="number" id="playerIdInput" class="id-input" placeholder="Ingresa tu ID de jugador" autocomplete="off">
+          <button class="btn btn-primary btn-verificar-anim" id="btnVerificar" onclick="verificarID()">Verificar ID</button>
+        </div>
+        
+        <p class="id-help-text">Ingresa tu ID para confirmar tu cuenta.</p>
+
+        <div id="successMessage" class="success-message">
+          <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+          ¡ID Verificado correctamente!
+        </div>
+
+        <div id="errorMessage" class="error-message">
+          <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+          El ID debe tener entre 8 y 11 dígitos.
+        </div>
+      </div>
+
+      <p class="section-sub">Paso 2: Elige el paquete que necesitas. Precios en <b>pesos colombianos (COP)</b>.</p>
+      
+      <div class="grid" id="priceGrid"></div>
+    </section>
+
+    <section class="section reveal">
+      <h2 class="section-title">Lo que dicen mis clientes</h2>
+      <p class="section-sub">La confianza es lo primero</p>
+      <div class="testimonials-grid">
+        
+        <div class="testimonial-card">
+          <img src="Compra1.jpg" alt="Recarga exitosa cliente 1" class="testimonial-img">
+          <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+          <p class="testimonial-text">"Todo bien la verdad. Puse mi ID, pagué por Nequi y a los pocos minutos ya tenía los diamantes en la cuenta. Sí responde rápido."</p>
+        </div>
+
+        <div class="testimonial-card">
+          <img src="Compra2.jpg" alt="Recarga exitosa cliente 2" class="testimonial-img">
+          <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+          <p class="testimonial-text">"Tenía dudas al principio porque es manual, pero le escribí y me atendió al toque. Ya me llegaron los diamantes, todo legal."</p>
+        </div>
+
+        <div class="testimonial-card">
+          <img src="Compra3.jpg" alt="Recarga exitosa cliente 3" class="testimonial-img">
+          <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+          <p class="testimonial-text">"Ya le he comprado como 4 veces. Todo es manual pero súper seguro. Yesid es de confianza."</p>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="canal-wa" class="channel-section reveal">
+      <div class="channel-card">
+        <h2>¡Únete a mi Canal de WhatsApp!</h2>
+        <p>Entérate de promociones, sorteos y diamantes más baratos <b>antes que nadie</b>.</p>
+        <a href="https://whatsapp.com/channel/0029VbEcEvE5kg79tlAG4j0d" target="_blank" class="btn btn-lg btn-whatsapp-channel">
+          📢 Entrar al Canal
+        </a>
+      </div>
+    </section>
+
+    <section id="como-comprar" class="section">
+      <h2 class="section-title">¿Cómo comprar?</h2>
+      <p class="section-sub">Solo 3 pasos y listo</p>
+
+      <div class="steps">
+        <div class="step reveal">
+          <div class="step-num">1</div>
+          <h3>Ingresa tu ID</h3>
+          <p>Escribe tu ID de Free Fire arriba y dale clic en Verificar.</p>
+        </div>
+        <div class="step reveal">
+          <div class="step-num">2</div>
+          <h3>Elige tu paquete</h3>
+          <p>Selecciona la cantidad de diamantes que quieres y presiona "Comprar".</p>
+        </div>
+        <div class="step reveal">
+          <div class="step-num">3</div>
+          <h3>Paga y recibe</h3>
+          <p>Escanea el QR o copia el monto, envía tu comprobante por WhatsApp y en minutos tendrás tus diamantes.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" class="section">
+      <h2 class="section-title">Preguntas frecuentes</h2>
+      <p class="section-sub">Lo que suelen preguntarnos</p>
+
+      <div class="faq">
+        <details>
+          <summary>¿Cuánto tarda la entrega?</summary>
+          <p>Normalmente entre 5 y 15 minutos después de confirmar el pago.</p>
+        </details>
+        <details>
+          <summary>¿Es seguro?</summary>
+          <p>Sí. Solo necesitamos tu ID de jugador, nunca tu contraseña ni datos de acceso.</p>
+        </details>
+        <details>
+          <summary>¿Qué métodos de pago aceptan?</summary>
+          <p>Actualmente <b>solo recibimos pagos por Nequi a nombre de Mig Gar</b>. Verifica el nombre al escanear el QR.</p>
+        </details>
+        <details>
+          <summary>¿Quién maneja la página?</summary>
+          <p>¡Hola! Soy Yesid. Manejo la página por mi cuenta, nadie más trabaja aquí. Por eso mismo todo es <b>100% manual</b>, así que si a veces me demoro un poquito en responder, te pido paciencia. ¡Estoy trabajando para darte el mejor precio! :)</p>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="social-links">
+      <a href="https://tiktok.com/@f7yesid" target="_blank" rel="noopener" class="social-icon tiktok" aria-label="TikTok">
+        <svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+      </a>
+      <a href="https://youtube.com/@f7yesid" target="_blank" rel="noopener" class="social-icon youtube" aria-label="YouTube">
+        <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+      </a>
+    </div>
+    
+    <div>
+      © <span id="year"></span> Yesid Recargas · Todos los precios pueden variar · Hecho con ❤️
+    </div>
+
+    <div class="footer-links">
+      <a href="#" onclick="abrirModalTerminos(event)">Términos y Condiciones</a>
+    </div>
+
+    <span class="version-tag" id="adminTrigger">v7.0</span>
+  </footer>
+
+  <div class="modal-overlay" id="modalTerminos">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Términos y Condiciones</h2>
+        <button class="close-modal" onclick="cerrarModalTerminos()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Bienvenido a <b>Yesid Recargas</b>. Al realizar una compra en esta página, aceptas los siguientes términos:</p>
+        <h3>1. Proceso de Recarga</h3>
+        <p>Todas las recargas se realizan de forma manual. Una vez que envíes tu ID y confirmes el pago por Nequi a nombre de <b>Mig Gar</b>, tu pedido será procesado. El tiempo de entrega estimado es de 5 a 15 minutos, aunque puede variar según la demanda.</p>
+        <h3>2. Datos del Jugador</h3>
+        <p>Es responsabilidad del cliente proporcionar el ID de Free Fire correcto. No nos hacemos responsables por recargas enviadas a IDs erróneos proporcionados por el cliente.</p>
+        <h3>3. Reembolsos</h3>
+        <p>No se realizan reembolsos una vez que la recarga ha sido efectuada en la cuenta del jugador. Si hay un problema con tu pedido, contáctanos de inmediato por WhatsApp para solucionarlo.</p>
+        <h3>4. Precios</h3>
+        <p>Los precios están sujetos a cambios sin previo aviso debido a variaciones en el mercado. El precio válido es el que se muestra en el momento de realizar el pedido.</p>
+        <h3>5. Privacidad</h3>
+        <p>Solo solicitamos tu ID de jugador. Nunca te pediremos contraseñas, correos electrónicos ni datos de acceso a tu cuenta de Free Fire.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modalGaleria">
+    <div class="modal-content modal-large">
+      <div class="modal-header">
+        <h2>👥 Clientes Felices</h2>
+        <button class="close-modal" onclick="cerrarModalGaleria()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="text-align: center; margin-bottom: 20px;">Estas son capturas reales de clientes que ya recibieron sus diamantes.</p>
+        <div class="gallery-grid" id="galleryGrid"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modalEventos">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>🎉 Eventos Activos</h2>
+        <button class="close-modal" onclick="cerrarModalEventos()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="event-card">
+          <div class="event-icon">🎁</div>
+          <h3 class="event-title">SORTEO DE 110💎 GRATIS</h3>
+          <p class="event-subtitle">Al llegar a 20 seguidores en WhatsApp</p>
+          <div class="progress-container">
+            <div class="progress-bar"></div>
+            <span class="progress-text">19 / 20</span>
+          </div>
+          <p class="event-footer-text">¡Falta solo 1 persona para el sorteo!</p>
+          <a href="https://whatsapp.com/channel/0029VbEcEvE5kg79tlAG4j0d" target="_blank" class="btn btn-primary" style="margin-top: 20px; width: 100%;">
+            📢 Unirse al Canal y Participar
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modalPago">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Realizar Pago</h2>
+        <button class="close-modal" onclick="cerrarModalPago()">&times;</button>
+      </div>
+      <div class="modal-body text-center">
+        <p style="margin-bottom: 15px;">Escanea el código QR o envía el <b>monto exacto</b> a mi cuenta de Nequi:</p>
+        <div class="qr-container">
+          <img src="QR.png" alt="Código QR de Nequi" class="qr-image" onerror="this.src='https://via.placeholder.com/200?text=AQUI+VA+TU+QR'">
+        </div>
+        <hr style="border-color: var(--card-border); margin: 20px 0;">
+        <p style="font-weight: 700; color: #fff; margin-bottom: 10px;">Verifica el destinatario:</p>
+        <div class="info-box" style="justify-content: center;">
+          <div class="info-text" style="text-align: center;">
+            <span>Titular de la cuenta</span>
+            Mig Gar
+          </div>
+        </div>
+        <div class="info-box">
+          <div class="info-text">
+            <span>Monto a Enviar</span>
+            <span style="color: var(--neon-strong); font-size: 1.2rem; font-family: 'Orbitron'; display: inline-block; text-transform: none;" id="montoCopiar">$0</span>
+          </div>
+          <button class="btn-copy" onclick="copiarMonto(this)">
+            <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+            Copiar
+          </button>
+        </div>
+        <div class="alert-box">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+          <p>Después de finalizar, <b>tienes que enviar tu comprobante de pago</b> por WhatsApp para procesar tu pedido.</p>
+        </div>
+        <button class="btn btn-primary btn-lg" style="width: 100%; margin-top: 10px;" onclick="finalizarCompra()">
+          Finalizar y Enviar Pedido
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="support-wrapper">
+    <button class="support-btn" onclick="toggleChat()" aria-label="Abrir soporte">
+      <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+    </button>
+    <div class="live-badge">
+      <div class="live-dot"></div> En Vivo
+    </div>
+  </div>
+
+  <div class="chat-window" id="chatWindow">
+    <div class="chat-header">
+      <h4>Soporte Yesid</h4>
+      <button class="close-btn" onclick="toggleChat()">&times;</button>
+    </div>
+    <div class="chat-body" id="chatBody">
+      <div class="chat-msg bot">¡Hola! 👋 ¿En qué te puedo ayudar?</div>
+    </div>
+    
+    <div class="chat-subject-group">
+      <button class="chat-subject-btn" id="chatSubjectBtn" onclick="toggleSubjectDropdown(event)">
+        <span>SELECCIONA ASUNTO</span>
+        <span>▼</span>
+      </button>
+      <div class="chat-subject-dropdown" id="chatSubjectDropdown">
+        <div class="subject-option" onclick="seleccionarAsunto('Pregunta')">Pregunta</div>
+        <div class="subject-option" onclick="seleccionarAsunto('Problema')">Problema</div>
+      </div>
+    </div>
+
+    <div class="chat-input-group">
+      <input type="text" id="chatInput" class="chat-input" placeholder="Escribe tu mensaje..." onkeypress="handleChatEnter(event)">
+      <button class="chat-send-btn" onclick="enviarSoporte()">
+        <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
