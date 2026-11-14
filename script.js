@@ -1,7 +1,7 @@
 const CONFIG = {
   whatsapp: "573136895221",
   paquetes: [
-    { diamantes: 110,  precio: 2900, popular: false },
+    { diamantes: 110,  precio: 3200, popular: false },
     { diamantes: 341,  precio: 10500, popular: false },
     { diamantes: 572,  precio: 16500, popular: true },
     { diamantes: 1166, precio: 28900, popular: false },
