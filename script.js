@@ -4,9 +4,9 @@ const CONFIG = {
     { diamantes: 110,  precio: 2900, popular: false },
     { diamantes: 341,  precio: 10500, popular: false },
     { diamantes: 572,  precio: 16500, popular: true },
-    { diamantes: 1166, precio: 28500, popular: false },
-    { diamantes: 2398, precio: 56500, popular: false },
-    { diamantes: 6160, precio: 136500, popular: false },
+    { diamantes: 1166, precio: 28900, popular: false },
+    { diamantes: 2398, precio: 56900, popular: false },
+    { diamantes: 6160, precio: 137500, popular: false },
     { diamantes: 1738, precio: 42000, precioViejo: 58200, ahorro: "28%", combo: true, popular: false },
     { diamantes: 913,  precio: 24900, precioViejo: 31600, ahorro: "21%", combo: true, popular: false },
     { diamantes: "Semanal", precio: 7900, imagen: "semanal.png" },
@@ -428,7 +428,6 @@ function initYear() {
 
 document.addEventListener("DOMContentLoaded", () => {
   renderPaquetes();
-  initReveal();
   initHeaderScroll();
   initFaq();
   initYear();
