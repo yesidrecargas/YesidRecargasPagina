@@ -17,65 +17,51 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
   
+  <link rel="icon" type="image/png" href="Logo.png">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-  <div class="theme-loader" id="themeLoader">
-    <div class="theme-loader-spinner"></div>
-  </div>
-
   <header class="site-header" id="siteHeader">
     <a href="#" class="logo-container">
-      <svg class="logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color: var(--neon-strong)" />
-            <stop offset="100%" style="stop-color: var(--neon)" />
-          </linearGradient>
-        </defs>
-        <circle cx="50" cy="50" r="46" fill="none" stroke="url(#logoGrad)" stroke-width="3"/>
-        <path d="M 25 35 L 35 20 L 50 30 L 65 20 L 75 35 Z" fill="url(#logoGrad)" />
-        <path d="M 35 45 L 45 60 L 45 75 L 55 75 L 55 60 L 65 45 L 52 45 L 50 55 L 48 45 Z" fill="#ffffff" />
-        <path d="M 58 45 L 58 75 L 66 75 L 66 63 L 72 75 L 80 75 L 73 60 C 78 58 80 53 78 48 C 75 45 70 45 65 45 Z M 66 51 L 70 51 C 72 51 73 52 73 54 C 73 56 72 57 70 57 L 66 57 Z" fill="#ffffff" />
-      </svg>
-      <div class="logo-text">YESID <span>RECARGAS</span></div>
+      <img src="LogoYesidRecargas.png" alt="Yesid Recargas" class="logo-img">
     </a>
-
-    <div class="header-controls">
-      <button class="btn-header" onclick="abrirModalGaleria()">👥 Clientes</button>
-      <button class="btn-header" onclick="abrirModalEventos()">🎁 Eventos</button>
-      
-      <div class="theme-selector" id="themeSelector">
-        <button class="theme-btn" onclick="toggleThemeDropdown(event)">🎨 Temas</button>
-        <div class="theme-dropdown" id="themeDropdown">
-          <div class="theme-option active" data-theme="purple" onclick="seleccionarTema('purple')"><span><span class="color-dot dot-purple"></span>Morado</span> <span class="check">✓</span></div>
-          <div class="theme-option" data-theme="blue" onclick="seleccionarTema('blue')"><span><span class="color-dot dot-blue"></span>Azul / Cian</span> <span class="check" style="display:none">✓</span></div>
-          <div class="theme-option" data-theme="orange" onclick="seleccionarTema('orange')"><span><span class="color-dot dot-orange"></span>Amarillo / Naranja</span> <span class="check" style="display:none">✓</span></div>
-          <div class="theme-option" data-theme="pink" onclick="seleccionarTema('pink')"><span><span class="color-dot dot-pink"></span>Rosado / Rojo</span> <span class="check" style="display:none">✓</span></div>
-        </div>
-      </div>
-    </div>
   </header>
 
   <main>
+    <!-- SECCIÓN PRINCIPAL CON LOS BADGES DINÁMICOS -->
     <section class="hero">
+      
+      <!-- 👇 MARQUESINA CON BUCLE PERFECTO 👇 -->
+      <div class="marquee-container">
+        <div class="marquee-track">
+          <span class="marquee-content">¡Hola! Soy Yesid. Te comento que esta página depende de mí al 100%. Aquí solo pides los productos; de resto, todo lo gestiono por WhatsApp. 🕒 Recargas disponibles de 10:00 a.m. a 10:00 p.m. ✨</span>
+          <span class="marquee-content">¡Hola! Soy Yesid. Te comento que esta página depende de mí al 100%. Aquí solo pides los productos; de resto, todo lo gestiono por WhatsApp. 🕒 Recargas disponibles de 10:00 a.m. a 10:00 p.m. ✨</span>
+        </div>
+      </div>
+      <!-- 👆 FIN DE LA MARQUESINA 👆 -->
+
+      <div class="hero-badges">
+        <!-- Indicador dinámico arriba del título -->
+        <div class="online-indicator" id="statusIndicator">
+          <span class="online-dot" id="statusDot"></span> 
+          <span id="statusText">Yesid esta Online - Puedes Recargar</span>
+        </div>
+        
+        <div class="trust-badges">
+          <span class="trust-badge">💯 100% Seguro</span>
+          <span class="trust-badge">💜 Pago Nequi</span>
+          <span class="trust-badge">⚡ Entrega Rápida</span>
+        </div>
+      </div>
+
       <h1>Recarga tus <em>Diamantes Free Fire</em><br>al mejor precio</h1>
-      <br>
-      <a href="#precios" class="btn btn-primary btn-lg">Ver paquetes</a>
     </section>
 
     <div class="stats-banner reveal">
       <p class="stat-message">
         SIEMPRE HABLAS CON YESID<br>100% MANUAL Y SEGURO
       </p>
-    </div>
-
-    <div class="payment-section reveal">
-      <p class="payment-title">Método de pago aceptado</p>
-      <div class="payment-methods">
-        <div class="payment-pill">💜 Nequi</div>
-      </div>
     </div>
 
     <section id="precios" class="section">
@@ -89,7 +75,7 @@
           <button class="btn btn-primary btn-verificar-anim" id="btnVerificar" onclick="verificarID()">Verificar ID</button>
         </div>
         
-        <p class="id-help-text">Ingresa tu ID para confirmar tu cuenta.</p>
+        <p class="id-help-text" id="idHelpText">Ingresa tu ID para confirmar tu cuenta.</p>
 
         <div id="successMessage" class="success-message">
           <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
@@ -172,6 +158,10 @@
 
       <div class="faq">
         <details>
+          <summary>¿Cuál es el horario de atención?</summary>
+          <p>Atiendo todos los días de <b>10:00 a.m. a 10:00 p.m. (hora Colombia)</b>. Si me escribes fuera de este horario, con gusto te responderé al día siguiente. ¡Gracias por tu paciencia!</p>
+        </details>
+        <details>
           <summary>¿Cuánto tarda la entrega?</summary>
           <p>Normalmente entre 5 y 15 minutos después de confirmar el pago.</p>
         </details>
@@ -209,9 +199,10 @@
       <a href="#" onclick="abrirModalTerminos(event)">Términos y Condiciones</a>
     </div>
 
-    <span class="version-tag" id="adminTrigger">v7.0</span>
+    <span class="version-tag" id="adminTrigger">v8.8</span>
   </footer>
 
+  <!-- MODAL DE TÉRMINOS -->
   <div class="modal-overlay" id="modalTerminos">
     <div class="modal-content">
       <div class="modal-header">
@@ -234,43 +225,7 @@
     </div>
   </div>
 
-  <div class="modal-overlay" id="modalGaleria">
-    <div class="modal-content modal-large">
-      <div class="modal-header">
-        <h2>👥 Clientes Felices</h2>
-        <button class="close-modal" onclick="cerrarModalGaleria()">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p style="text-align: center; margin-bottom: 20px;">Estas son capturas reales de clientes que ya recibieron sus diamantes.</p>
-        <div class="gallery-grid" id="galleryGrid"></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal-overlay" id="modalEventos">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>🎉 Eventos Activos</h2>
-        <button class="close-modal" onclick="cerrarModalEventos()">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div class="event-card">
-          <div class="event-icon">🎁</div>
-          <h3 class="event-title">SORTEO DE 110💎 GRATIS</h3>
-          <p class="event-subtitle">Al llegar a 20 seguidores en WhatsApp</p>
-          <div class="progress-container">
-            <div class="progress-bar"></div>
-            <span class="progress-text">19 / 20</span>
-          </div>
-          <p class="event-footer-text">¡Falta solo 1 persona para el sorteo!</p>
-          <a href="https://whatsapp.com/channel/0029VbEcEvE5kg79tlAG4j0d" target="_blank" class="btn btn-primary" style="margin-top: 20px; width: 100%;">
-            📢 Unirse al Canal y Participar
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-
+  <!-- MODAL PAGO -->
   <div class="modal-overlay" id="modalPago">
     <div class="modal-content">
       <div class="modal-header">
@@ -311,37 +266,69 @@
     </div>
   </div>
 
+  <!-- MODAL DE ADVERTENCIA DE ID -->
+  <div class="modal-overlay" id="modalAdvertenciaID">
+    <div class="modal-content" style="max-width: 450px; border-color: #f59e0b;">
+      <div class="modal-header" style="background: rgba(245, 158, 11, 0.15);">
+        <h2 style="color: #f59e0b; text-shadow: 0 0 10px rgba(245,158,11,0.5);">Advertencia</h2>
+        <button class="close-modal" onclick="cerrarModalAdvertenciaID()">&times;</button>
+      </div>
+      <div class="modal-body text-center" style="padding: 0 25px;">
+        <p style="font-size: 1.1rem; margin-bottom: 20px;">
+          ¿Estás seguro que este ID <br>
+          <span class="text-purple" id="textoIdAdvertencia">12345678</span> <br>
+          es correcto? Si es así, presiona el siguiente botón:
+        </p>
+        <button class="btn btn-lg" id="btnConfirmarAdvertencia" onclick="confirmarAdvertenciaID()" style="width: 100%; margin-bottom: 15px;">
+          Confirmar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTÓN FLOTANTE DE SOPORTE -->
   <div class="support-wrapper">
     <button class="support-btn" onclick="toggleChat()" aria-label="Abrir soporte">
       <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
     </button>
-    <div class="live-badge">
-      <div class="live-dot"></div> En Vivo
+    <div class="live-badge" id="floatingBadge">
+      <div class="live-dot" id="floatingDot"></div> <span id="floatingText">Online</span>
     </div>
   </div>
 
+  <!-- VENTANA DE CHAT -->
   <div class="chat-window" id="chatWindow">
     <div class="chat-header">
       <h4>Soporte Yesid</h4>
-      <button class="close-btn" onclick="toggleChat()">&times;</button>
-    </div>
-    <div class="chat-body" id="chatBody">
-      <div class="chat-msg bot">¡Hola! 👋 ¿En qué te puedo ayudar?</div>
-    </div>
-    
-    <div class="chat-subject-group">
-      <button class="chat-subject-btn" id="chatSubjectBtn" onclick="toggleSubjectDropdown(event)">
-        <span>SELECCIONA ASUNTO</span>
-        <span>▼</span>
-      </button>
+      
+      <!-- INDICADOR CONECTADO / DESCONECTADO -->
+      <div class="chat-connection-status" id="chatConnStatus">
+        <span class="chat-conn-dot" id="chatConnDot"></span> 
+        <span id="chatConnText">Conectado👍</span>
+      </div>
+
+      <div class="chat-header-right">
+        <button class="chat-subject-btn" id="chatSubjectBtn" onclick="toggleSubjectDropdown(event)">
+          <span>ASUNTO</span>
+          <span>▼</span>
+        </button>
+        <button class="close-btn" onclick="toggleChat()">&times;</button>
+      </div>
       <div class="chat-subject-dropdown" id="chatSubjectDropdown">
         <div class="subject-option" onclick="seleccionarAsunto('Pregunta')">Pregunta</div>
         <div class="subject-option" onclick="seleccionarAsunto('Problema')">Problema</div>
       </div>
     </div>
+    
+    <div class="chat-body" id="chatBody">
+      <div class="chat-msg bot">
+        <span class="chat-sender">Yesid Bot</span>
+        <div>¡Hola! 👋 ¿En qué te puedo ayudar?</div>
+      </div>
+    </div>
 
     <div class="chat-input-group">
-      <input type="text" id="chatInput" class="chat-input" placeholder="Escribe tu mensaje..." onkeypress="handleChatEnter(event)">
+      <textarea id="chatInput" class="chat-input" placeholder="Escribe tu mensaje..." rows="1" on7635724070keypress="handleChatEnter(event)"></textarea>
       <button class="chat-send-btn" onclick="enviarSoporte()">
         <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
       </button>
@@ -350,4 +337,4 @@
 
   <script src="script.js"></script>
 </body>
-</html>
+  </html>
