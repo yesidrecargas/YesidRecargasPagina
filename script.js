@@ -14,13 +14,77 @@ const CONFIG = {
   ]
 };
 
-const pruebasGaleria = [];
-
 let idJugadorValidado = "";
 let paqueteSeleccionado = null; 
+let timeoutConfirmar; 
+let isOnlineNow = false; // Variable global para saber si estamos en horario
+
+// ==========================================
+// FUNCIÓN AUTOMÁTICA DE ESTADO (EN LÍNEA/OFFLINE)
+// ==========================================
+function actualizarEstadoYesid() {
+  const horaColombia = new Date().toLocaleString("es-CO", {
+    timeZone: "America/Bogota",
+    hour: 'numeric',
+    hour12: false
+  });
+  
+  const hora = parseInt(horaColombia, 10); 
+  
+  // 🕒 HORARIO CONFIGURADO: 10:00 AM a 10:00 PM
+  const horaInicio = 10;  
+  const horaFin = 22;     
+  
+  const statusText = document.getElementById("statusText");
+  const statusDot = document.getElementById("statusDot");
+  const statusIndicator = document.getElementById("statusIndicator");
+  
+  const floatingBadge = document.getElementById("floatingBadge");
+  const floatingDot = document.getElementById("floatingDot");
+  const floatingText = document.getElementById("floatingText");
+  
+  const chatConnStatus = document.getElementById("chatConnStatus");
+  const chatConnText = document.getElementById("chatConnText");
+  
+  if (hora >= horaInicio && hora < horaFin) {
+    isOnlineNow = true; // Guardamos que SÍ estamos online
+
+    if(statusText) statusText.textContent = "Yesid esta Online - Puedes Recargar";
+    if(statusIndicator) statusIndicator.classList.remove("offline-indicator");
+    if(statusDot) statusDot.classList.remove("offline-dot");
+
+    if(floatingText) floatingText.textContent = "Online";
+    if(floatingBadge) floatingBadge.classList.remove("offline-badge");
+    if(floatingDot) floatingDot.classList.remove("offline-dot");
+
+    if(chatConnText) chatConnText.textContent = "Conectado👍";
+    if(chatConnStatus) chatConnStatus.classList.remove("offline-chat-conn");
+
+  } else {
+    isOnlineNow = false; // Guardamos que estamos OFFLINE
+
+    if(statusText) statusText.textContent = "Yesid esta offline - Intenta despues de 10:00 a.m";
+    if(statusIndicator) statusIndicator.classList.add("offline-indicator");
+    if(statusDot) statusDot.classList.add("offline-dot");
+
+    if(floatingText) floatingText.textContent = "Offline";
+    if(floatingBadge) floatingBadge.classList.add("offline-badge");
+    if(floatingDot) floatingDot.classList.add("offline-dot");
+
+    if(chatConnText) chatConnText.textContent = "Desconectado😴";
+    if(chatConnStatus) chatConnStatus.classList.add("offline-chat-conn");
+  }
+}
+
+setInterval(actualizarEstadoYesid, 60000);
+
+// ==========================================
+// FUNCIONES DE LA PÁGINA
+// ==========================================
 
 function bloquearScroll() {
   document.documentElement.classList.add("modal-open");
+  
   document.body.classList.add("modal-open");
 }
 function desbloquearScroll() {
@@ -29,9 +93,8 @@ function desbloquearScroll() {
 }
 
 const modalTerminos = document.getElementById("modalTerminos");
-const modalGaleria = document.getElementById("modalGaleria");
-const modalEventos = document.getElementById("modalEventos");
 const modalPago = document.getElementById("modalPago");
+const modalAdvertenciaID = document.getElementById("modalAdvertenciaID");
 
 function abrirModalTerminos(e) {
   e.preventDefault();
@@ -42,23 +105,6 @@ function cerrarModalTerminos() {
   modalTerminos.classList.remove("active");
   desbloquearScroll();
 }
-function abrirModalGaleria() {
-  renderGaleria();
-  modalGaleria.classList.add("active");
-  bloquearScroll();
-}
-function cerrarModalGaleria() {
-  modalGaleria.classList.remove("active");
-  desbloquearScroll();
-}
-function abrirModalEventos() {
-  modalEventos.classList.add("active");
-  bloquearScroll();
-}
-function cerrarModalEventos() {
-  modalEventos.classList.remove("active");
-  desbloquearScroll();
-}
 function cerrarModalPago() {
   modalPago.classList.remove("active");
   desbloquearScroll();
@@ -66,35 +112,15 @@ function cerrarModalPago() {
 
 window.addEventListener("click", (e) => {
   if (e.target === modalTerminos) cerrarModalTerminos();
-  if (e.target === modalGaleria) cerrarModalGaleria();
-  if (e.target === modalEventos) cerrarModalEventos();
   if (e.target === modalPago) cerrarModalPago();
+  if (e.target === modalAdvertenciaID) cerrarModalAdvertenciaID();
+  
   const selectorAsunto = document.getElementById("chatSubjectDropdown");
   const btnAsunto = document.getElementById("chatSubjectBtn");
-  if (selectorAsunto.classList.contains("show") && !selectorAsunto.contains(e.target) && !btnAsunto.contains(e.target)) {
+  if (selectorAsunto && selectorAsunto.classList.contains("show") && !selectorAsunto.contains(e.target) && !btnAsunto.contains(e.target)) {
     selectorAsunto.classList.remove("show");
   }
 });
-
-function renderGaleria() {
-  const container = document.getElementById("galleryGrid");
-  if (!pruebasGaleria || pruebasGaleria.length === 0) {
-    container.innerHTML = `
-      <div class="gallery-empty">
-        <span class="empty-icon">📸</span>
-        <p style="font-weight:700; color:#fff; margin-bottom:5px;">Aún no hay pruebas publicadas</p>
-        <p style="font-size:0.9rem;">Las capturas de clientes estarán disponibles muy pronto.</p>
-      </div>
-    `;
-    return;
-  }
-  container.innerHTML = pruebasGaleria.map(p => `
-    <div class="gallery-item">
-      <img src="${p.imagen}" class="gallery-img" onerror="this.src='https://via.placeholder.com/200?text=Sin+Foto'">
-      <div class="gallery-text">${p.texto}</div>
-    </div>
-  `).join('');
-}
 
 const chatWindow = document.getElementById("chatWindow");
 const chatInput = document.getElementById("chatInput");
@@ -106,10 +132,15 @@ let dudaCliente = "";
 let asuntoCliente = ""; 
 
 function toggleChat() {
-  if (chatWindow.style.display === "flex") {
-    chatWindow.style.display = "none";
+  if (chatWindow.classList.contains("active")) {
+    chatWindow.classList.remove("active");
+    document.body.classList.remove("chat-open");
+    desbloquearScroll();
   } else {
-    chatWindow.style.display = "flex";
+    chatWindow.classList.add("active");
+    document.body.classList.add("chat-open");
+    bloquearScroll();
+    setTimeout(() => { chatBody.scrollTop = chatBody.scrollHeight; }, 100);
   }
 }
 
@@ -129,10 +160,14 @@ function seleccionarAsunto(asunto) {
 }
 
 function handleChatEnter(event) {
-  if (event.key === "Enter") {
+  if (event.key === "Enter" && !event.shiftKey) {
     event.preventDefault();
     enviarSoporte();
   }
+}
+
+function obtenerHora() {
+  return new Date().toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', hour12: false });
 }
 
 function enviarSoporte() {
@@ -149,23 +184,39 @@ function enviarSoporte() {
 
   dudaCliente = duda;
   chatInput.value = "";
+  chatInput.style.height = "auto";
 
   const msgUser = document.createElement("div");
   msgUser.className = "chat-msg user";
-  msgUser.textContent = `[${asuntoCliente}] ${duda}`;
+  msgUser.innerHTML = `
+    <span class="chat-sender">Tú</span>
+    <div style="word-break: break-word; overflow-wrap: anywhere;">${duda}</div>
+    <span class="chat-time">${obtenerHora()}</span>
+  `;
   chatBody.appendChild(msgUser);
   chatBody.scrollTop = chatBody.scrollHeight;
 
   setTimeout(() => {
     const msgBot = document.createElement("div");
     msgBot.className = "chat-msg bot";
+    
+    // 👇 LÓGICA DEL MENSAJE DEL BOT SEGÚN EL ESTADO 👇
+    let textoRespuesta = "";
+    
+    if (isOnlineNow) {
+      textoRespuesta = `¡Mensaje recibido! 📩<br>Para enviármelo a mi WhatsApp y responderte rápido, haz clic en el botón de abajo:`;
+    } else {
+      textoRespuesta = `¡Mensaje recibido! 📩<br>Actualmente estoy fuera de línea 😴. Puedes enviar el mensaje a mi WhatsApp y te responderé mañana a partir de las <b>10:00 a.m.</b>`;
+    }
+
     msgBot.innerHTML = `
-      ¡Mensaje recibido! 📩<br>
-      Para enviármelo a mi WhatsApp y responderte rápido, haz clic en el botón de abajo:<br>
+      <span class="chat-sender">Yesid Bot</span>
+      <div>${textoRespuesta}</div>
       <button class="btn-chat-wa" onclick="irAWhatsAppSoporte()">
         <svg viewBox="0 0 24 24" style="width:16px; height:16px; fill:currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.4.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.7-1.5-.9-2.1-.2-.5-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3zM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 4.9L2 22l5.3-1.4c1.4.8 3 1.2 4.7 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>
         Abrir WhatsApp
       </button>
+      <span class="chat-time">${obtenerHora()}</span>
     `;
     chatBody.appendChild(msgBot);
     chatBody.scrollTop = chatBody.scrollHeight;
@@ -176,60 +227,10 @@ function irAWhatsAppSoporte() {
   const mensaje = `*${asuntoCliente}*\n\n${dudaCliente}`;
   const url = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(mensaje)}`;
   window.open(url, "_blank");
-  chatWindow.style.display = "none";
+  chatWindow.classList.remove("active");
+  document.body.classList.remove("chat-open");
+  desbloquearScroll();
 }
-
-function toggleThemeDropdown(event) {
-  event.stopPropagation();
-  document.getElementById("themeDropdown").classList.toggle("show");
-}
-
-function seleccionarTema(tema) {
-  const currentTheme = document.body.className.replace('theme-', '') || 'purple';
-  if (currentTheme === tema) {
-    document.getElementById("themeDropdown").classList.remove("show");
-    return;
-  }
-  const loader = document.getElementById("themeLoader");
-  loader.classList.add("active");
-  document.getElementById("themeDropdown").classList.remove("show");
-  setTimeout(() => {
-    document.body.className = ''; 
-    if (tema !== 'purple') {
-      document.body.classList.add(`theme-${tema}`);
-    }
-    document.querySelectorAll('.theme-option').forEach(opt => {
-      opt.classList.remove('active');
-      opt.querySelector('.check').style.display = 'none';
-    });
-    const opcionActiva = document.querySelector(`.theme-option[data-theme="${tema}"]`);
-    opcionActiva.classList.add('active');
-    opcionActiva.querySelector('.check').style.display = 'inline';
-    localStorage.setItem("yr_theme", tema);
-    loader.classList.remove("active");
-  }, 800); 
-}
-
-const temaGuardado = localStorage.getItem("yr_theme");
-if (temaGuardado) {
-  document.body.className = temaGuardado !== 'purple' ? `theme-${temaGuardado}` : '';
-  setTimeout(() => {
-    document.querySelectorAll('.theme-option').forEach(opt => {
-      opt.classList.remove('active');
-      opt.querySelector('.check').style.display = 'none';
-    });
-    const opcionActiva = document.querySelector(`.theme-option[data-theme="${temaGuardado}"]`);
-    if(opcionActiva) {
-      opcionActiva.classList.add('active');
-      opcionActiva.querySelector('.check').style.display = 'inline';
-    }
-  }, 100);
-}
-
-window.addEventListener("click", function(e) {
-  const selector = document.getElementById("themeSelector");
-  if (!selector.contains(e.target)) document.getElementById("themeDropdown").classList.remove("show");
-});
 
 const formatNumber = (n) => n.toLocaleString("es-CO");
 
@@ -296,12 +297,14 @@ const btnVerificar = document.getElementById("btnVerificar");
 const msgSuccess = document.getElementById("successMessage");
 const msgError = document.getElementById("errorMessage");
 const idContainer = document.getElementById("idContainer");
+const idHelpText = document.getElementById("idHelpText");
 
 inputId.addEventListener("input", () => {
   if (idJugadorValidado !== "") {
     idJugadorValidado = "";
     msgSuccess.style.display = "none";
     btnVerificar.style.display = "block";
+    idHelpText.style.display = "block";
   }
   inputId.classList.remove("error");
   msgError.style.display = "none";
@@ -316,16 +319,63 @@ function verificarID() {
     idJugadorValidado = "";
     return;
   }
+  
   btnVerificar.innerHTML = '<span class="spinner"></span>';
   btnVerificar.disabled = true;
   inputId.classList.remove("error");
   msgError.style.display = "none";
+
   setTimeout(() => {
-    idJugadorValidado = idValue; 
-    msgSuccess.style.display = "flex"; 
     btnVerificar.innerHTML = 'Verificar ID';
     btnVerificar.disabled = false;
+
+    document.getElementById("textoIdAdvertencia").textContent = idValue;
+    modalAdvertenciaID.classList.add("active");
+    bloquearScroll();
+
+    const btnConfirmar = document.getElementById("btnConfirmarAdvertencia");
+    let timeLeft = 5;
+    
+    btnConfirmar.disabled = true;
+    btnConfirmar.textContent = `Espera (${timeLeft}s)...`;
+    btnConfirmar.className = "btn btn-disabled btn-lg";
+    btnConfirmar.style.width = "100%";
+    btnConfirmar.style.marginBottom = "15px";
+
+    clearInterval(timeoutConfirmar);
+    timeoutConfirmar = setInterval(() => {
+      timeLeft--;
+      if (timeLeft > 0) {
+        btnConfirmar.textContent = `Espera (${timeLeft}s)...`;
+      } else {
+        clearInterval(timeoutConfirmar);
+        btnConfirmar.disabled = false;
+        btnConfirmar.textContent = "Confirmar";
+        btnConfirmar.className = "btn btn-success btn-lg";
+      }
+    }, 1000);
+
   }, 1000); 
+}
+
+function confirmarAdvertenciaID() {
+  const idValue = inputId.value.trim();
+  idJugadorValidado = idValue;
+  
+  modalAdvertenciaID.classList.remove("active");
+  desbloquearScroll();
+  clearInterval(timeoutConfirmar);
+
+  idHelpText.style.display = "none";
+  msgSuccess.style.display = "flex";
+
+  document.getElementById("precios").scrollIntoView({ behavior: "smooth" });
+}
+
+function cerrarModalAdvertenciaID() {
+  modalAdvertenciaID.classList.remove("active");
+  desbloquearScroll();
+  clearInterval(timeoutConfirmar);
 }
 
 function comprarPaquete(tituloOId, precio) {
@@ -395,40 +445,24 @@ function initHeaderScroll() {
   }, { passive: true });
 }
 
-function initReveal() {
-  const elementos = document.querySelectorAll(".reveal");
-  if (!("IntersectionObserver" in window)) {
-    elementos.forEach((el) => el.classList.add("is-visible"));
-    return;
-  }
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("is-visible");
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.15 });
-  elementos.forEach((el) => observer.observe(el));
-}
-
-function initFaq() {
-  const items = document.querySelectorAll(".faq details");
-  items.forEach((item) => {
-    item.addEventListener("toggle", () => {
-      if (!item.open) return;
-      items.forEach((otro) => { if (otro !== item) otro.open = false; });
-    });
-  });
-}
-
 function initYear() {
   document.getElementById("year").textContent = new Date().getFullYear();
 }
 
+chatInput.addEventListener('input', function() {
+  this.style.height = 'auto';
+  this.style.height = (this.scrollHeight) + 'px';
+  if (this.scrollHeight > 100) {
+    this.style.overflowY = 'auto';
+    this.style.height = '100px';
+  } else {
+    this.style.overflowY = 'hidden';
+  }
+});
+
 document.addEventListener("DOMContentLoaded", () => {
   renderPaquetes();
   initHeaderScroll();
-  initFaq();
   initYear();
+  actualizarEstadoYesid();
 });
