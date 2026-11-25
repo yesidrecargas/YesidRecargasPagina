@@ -25,7 +25,9 @@ const supabaseClient = window.supabase.createClient(
 
 const carouselImages = [
   "carrusel/agenda1.jpg",
-  "carrusel/agenda2.jpg"
+  "carrusel/agenda2.jpg",
+  "carrusel/agenda3.jpg",
+  "carrusel/agenda4.jpg"
 ];
 
 /* =====================================
@@ -104,7 +106,6 @@ async function loadStoreProducts() {
     return;
   }
 
-  // Comprobar que estén registrados todos los productos
   const loadedIds = new Set(data.map(item => String(item.id)));
 
   const allProductsExist = products.every(product =>
@@ -122,7 +123,6 @@ async function loadStoreProducts() {
     return;
   }
 
-  // Actualizar precios oficiales
   data.forEach(item => {
     const product = products.find(
       product => product.id === String(item.id)
@@ -134,14 +134,228 @@ async function loadStoreProducts() {
   });
 
   productsLoaded = true;
-
   renderProducts();
 
   console.log("Precios cargados correctamente desde Supabase.");
 }
 
 /* =====================================
+   VISOR DE IMÁGENES
+===================================== */
+
+let lightboxIndex = 0;
+let lightboxElement = null;
+let lightboxImage = null;
+let lightboxCounter = null;
+let lightboxAutoPlay = null;
+let previousScrollPosition = 0;
+
+/* =====================================
+   AUTOPLAY DEL VISOR GRANDE
+===================================== */
+
+function stopLightboxAutoPlay() {
+  clearInterval(lightboxAutoPlay);
+  lightboxAutoPlay = null;
+}
+
+function startLightboxAutoPlay() {
+  stopLightboxAutoPlay();
+
+  if (
+    lightboxElement &&
+    lightboxElement.classList.contains("active") &&
+    carouselImages.length > 1
+  ) {
+    lightboxAutoPlay = setInterval(() => {
+      changeLightboxImage(1);
+    }, 4000);
+  }
+}
+
+/* =====================================
+   CREAR VISOR
+===================================== */
+
+function createLightbox() {
+  if (lightboxElement) return;
+
+  lightboxElement = document.createElement("div");
+  lightboxElement.className = "image-lightbox";
+  lightboxElement.id = "imageLightbox";
+
+  lightboxElement.innerHTML = `
+    <button
+      type="button"
+      class="lightbox-close"
+      id="lightboxClose"
+      aria-label="Cerrar visor">
+      &times;
+    </button>
+
+    <button
+      type="button"
+      class="lightbox-arrow lightbox-prev"
+      id="lightboxPrev"
+      aria-label="Imagen anterior">
+      &#10094;
+    </button>
+
+    <img
+      id="lightboxImage"
+      src=""
+      alt="Imagen ampliada">
+
+    <button
+      type="button"
+      class="lightbox-arrow lightbox-next"
+      id="lightboxNext"
+      aria-label="Imagen siguiente">
+      &#10095;
+    </button>
+
+    <div class="lightbox-counter" id="lightboxCounter"></div>
+  `;
+
+  document.body.appendChild(lightboxElement);
+
+  lightboxImage = document.getElementById("lightboxImage");
+  lightboxCounter = document.getElementById("lightboxCounter");
+
+  document.getElementById("lightboxClose")
+    .addEventListener("click", closeLightbox);
+
+  document.getElementById("lightboxPrev")
+    .addEventListener("click", () => {
+      changeLightboxImage(-1);
+      startLightboxAutoPlay();
+    });
+
+  document.getElementById("lightboxNext")
+    .addEventListener("click", () => {
+      changeLightboxImage(1);
+      startLightboxAutoPlay();
+    });
+
+  lightboxElement.addEventListener("click", (event) => {
+    if (event.target === lightboxElement) {
+      closeLightbox();
+    }
+  });
+}
+
+/* =====================================
+   ABRIR VISOR
+===================================== */
+
+function openLightbox(index) {
+  createLightbox();
+
+  lightboxIndex = index;
+  updateLightboxImage();
+
+  previousScrollPosition = window.scrollY;
+
+  lightboxElement.classList.add("active");
+  document.body.classList.add("lightbox-open");
+
+  // Detener el desplazamiento sin perder la posición.
+  document.body.style.position = "fixed";
+  document.body.style.top = `-${previousScrollPosition}px`;
+  document.body.style.width = "100%";
+
+  // Pausar el carrusel normal.
+  stopCarouselAutoPlay();
+
+  // Iniciar cambio automático en pantalla completa.
+  startLightboxAutoPlay();
+
+  document.getElementById("lightboxClose").focus();
+}
+
+/* =====================================
+   CERRAR VISOR
+===================================== */
+
+function closeLightbox() {
+  if (!lightboxElement) return;
+
+  if (!lightboxElement.classList.contains("active")) return;
+
+  // Detener autoplay del visor.
+  stopLightboxAutoPlay();
+
+  lightboxElement.classList.remove("active");
+  document.body.classList.remove("lightbox-open");
+
+  document.body.style.position = "";
+  document.body.style.top = "";
+  document.body.style.width = "";
+
+  window.scrollTo(0, previousScrollPosition);
+
+  // Reanudar carrusel normal.
+  startCarouselAutoPlay();
+}
+
+/* =====================================
+   CAMBIAR IMAGEN DEL VISOR
+===================================== */
+
+function changeLightboxImage(direction) {
+  lightboxIndex =
+    (lightboxIndex + direction + carouselImages.length) %
+    carouselImages.length;
+
+  updateLightboxImage();
+}
+
+/* =====================================
+   ACTUALIZAR IMAGEN DEL VISOR
+===================================== */
+
+function updateLightboxImage() {
+  if (!lightboxImage || !lightboxCounter) return;
+
+  lightboxImage.src = carouselImages[lightboxIndex];
+
+  lightboxCounter.textContent =
+    `${lightboxIndex + 1} / ${carouselImages.length}`;
+
+  lightboxImage.alt =
+    `Imagen destacada ${lightboxIndex + 1}`;
+}
+
+/* =====================================
    CARRUSEL DE IMÁGENES
+===================================== */
+
+let carouselAutoPlay = null;
+let carouselAutoPlayEnabled = false;
+
+function stopCarouselAutoPlay() {
+  clearInterval(carouselAutoPlay);
+  carouselAutoPlay = null;
+}
+
+function startCarouselAutoPlay() {
+  stopCarouselAutoPlay();
+
+  if (
+    carouselAutoPlayEnabled &&
+    carouselImages.length > 1 &&
+    (!lightboxElement || !lightboxElement.classList.contains("active"))
+  ) {
+    carouselAutoPlay = setInterval(() => {
+      if (window.carouselNextSlide) {
+        window.carouselNextSlide();
+      }
+    }, 4000);
+  }
+}
+
+/* =====================================
+   INICIAR CARRUSEL
 ===================================== */
 
 function initCarousel() {
@@ -151,8 +365,14 @@ function initCarousel() {
   const prevButton = document.getElementById("carouselPrev");
   const nextButton = document.getElementById("carouselNext");
 
-  if (!track || !viewport || !dotsContainer ||
-      !prevButton || !nextButton || carouselImages.length === 0) {
+  if (
+    !track ||
+    !viewport ||
+    !dotsContainer ||
+    !prevButton ||
+    !nextButton ||
+    carouselImages.length === 0
+  ) {
     return;
   }
 
@@ -160,7 +380,7 @@ function initCarousel() {
   let startX = 0;
   let movedX = 0;
   let isDragging = false;
-  let autoPlay;
+  let suppressNextClick = false;
 
   track.innerHTML = "";
   dotsContainer.innerHTML = "";
@@ -178,6 +398,16 @@ function initCarousel() {
     slide.appendChild(img);
     track.appendChild(slide);
 
+    // Abrir imagen al tocarla.
+    slide.addEventListener("click", () => {
+      if (suppressNextClick) {
+        suppressNextClick = false;
+        return;
+      }
+
+      openLightbox(index);
+    });
+
     const dot = document.createElement("button");
     dot.type = "button";
     dot.className = "carousel-dot";
@@ -185,7 +415,7 @@ function initCarousel() {
 
     dot.addEventListener("click", () => {
       goToSlide(index);
-      restartAutoPlay();
+      startCarouselAutoPlay();
     });
 
     dotsContainer.appendChild(dot);
@@ -194,7 +424,8 @@ function initCarousel() {
   const dots = dotsContainer.querySelectorAll(".carousel-dot");
 
   function updateCarousel() {
-    track.style.transform = `translateX(-${currentIndex * 100}%)`;
+    track.style.transform =
+      `translateX(-${currentIndex * 100}%)`;
 
     dots.forEach((dot, index) => {
       dot.classList.toggle("active", index === currentIndex);
@@ -202,7 +433,9 @@ function initCarousel() {
   }
 
   function goToSlide(index) {
-    currentIndex = (index + carouselImages.length) % carouselImages.length;
+    currentIndex =
+      (index + carouselImages.length) % carouselImages.length;
+
     updateCarousel();
   }
 
@@ -214,31 +447,22 @@ function initCarousel() {
     goToSlide(currentIndex - 1);
   }
 
-  function startAutoPlay() {
-    stopAutoPlay();
+  // Permitir que el autoplay use la función del carrusel.
+  window.carouselNextSlide = nextSlide;
 
-    if (carouselImages.length > 1) {
-      autoPlay = setInterval(nextSlide, 4000);
-    }
-  }
-
-  function stopAutoPlay() {
-    clearInterval(autoPlay);
-  }
-
-  function restartAutoPlay() {
-    startAutoPlay();
-  }
+  carouselAutoPlayEnabled = true;
 
   nextButton.addEventListener("click", () => {
     nextSlide();
-    restartAutoPlay();
+    startCarouselAutoPlay();
   });
 
   prevButton.addEventListener("click", () => {
     prevSlide();
-    restartAutoPlay();
+    startCarouselAutoPlay();
   });
+
+  /* DESLIZAR CON EL DEDO O RATÓN */
 
   viewport.addEventListener("pointerdown", (event) => {
     if (event.pointerType === "mouse" && event.button !== 0) return;
@@ -246,12 +470,15 @@ function initCarousel() {
     startX = event.clientX;
     movedX = 0;
     isDragging = true;
+    suppressNextClick = false;
+
     viewport.classList.add("dragging");
-    stopAutoPlay();
+    stopCarouselAutoPlay();
   });
 
   viewport.addEventListener("pointermove", (event) => {
     if (!isDragging) return;
+
     movedX = event.clientX - startX;
   });
 
@@ -261,6 +488,14 @@ function initCarousel() {
     isDragging = false;
     viewport.classList.remove("dragging");
 
+    if (Math.abs(movedX) > 10) {
+      suppressNextClick = true;
+
+      setTimeout(() => {
+        suppressNextClick = false;
+      }, 300);
+    }
+
     if (movedX < -45) {
       nextSlide();
     } else if (movedX > 45) {
@@ -268,18 +503,18 @@ function initCarousel() {
     }
 
     movedX = 0;
-    restartAutoPlay();
+    startCarouselAutoPlay();
   }
 
   viewport.addEventListener("pointerup", endDrag);
   viewport.addEventListener("pointercancel", endDrag);
   viewport.addEventListener("lostpointercapture", endDrag);
 
-  viewport.addEventListener("mouseenter", stopAutoPlay);
-  viewport.addEventListener("mouseleave", startAutoPlay);
+  viewport.addEventListener("mouseenter", stopCarouselAutoPlay);
+  viewport.addEventListener("mouseleave", startCarouselAutoPlay);
 
   updateCarousel();
-  startAutoPlay();
+  startCarouselAutoPlay();
 }
 
 /* =====================================
@@ -582,12 +817,25 @@ if (productsGrid) {
 }
 
 /* =====================================
-   CERRAR CON TECLA ESCAPE
+   CERRAR VENTANAS CON TECLADO
 ===================================== */
 
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
+    closeLightbox();
     closePaymentModal();
+  }
+
+  if (lightboxElement && lightboxElement.classList.contains("active")) {
+    if (event.key === "ArrowRight") {
+      changeLightboxImage(1);
+      startLightboxAutoPlay();
+    }
+
+    if (event.key === "ArrowLeft") {
+      changeLightboxImage(-1);
+      startLightboxAutoPlay();
+    }
   }
 });
 
@@ -747,12 +995,12 @@ updateSchedule();
 
 setInterval(updateSchedule, 30000);
 
-// Cargar precios oficiales antes de habilitar compras
+// Cargar precios oficiales antes de habilitar compras.
 loadStoreProducts();
 
-// Iniciar estadísticas
+// Iniciar estadísticas.
 initVisitorsCounter();
 
-// Cargar y escuchar contador público
+// Cargar y escuchar contador público.
 loadPublicCounter();
 initPublicCounterRealtime();
