@@ -1,0 +1,117 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#08060f">
+
+  <title>Admin | YESID RECARGAS</title>
+
+  <link rel="stylesheet" href="admin.css">
+
+  <!-- FUENTES -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+  <header class="admin-header">
+    <h2>YESID <span>RECARGAS</span></h2>
+    <span class="admin-label">ADMIN PANEL</span>
+  </header>
+
+  <main class="admin-container">
+
+    <section id="loginSection" class="login-card">
+      <h1>Iniciar sesión</h1>
+      <p>Acceso exclusivo para administradores.</p>
+
+      <form id="loginForm">
+        <input type="email" id="adminEmail" placeholder="Correo electrónico" required>
+        <input type="password" id="adminPassword" placeholder="Contraseña" required>
+        <button type="submit" id="loginBtn">INICIAR SESIÓN</button>
+        <p id="loginMessage"></p>
+      </form>
+    </section>
+
+    <section id="adminSection" hidden>
+
+      <div class="welcome">
+        <h1>Panel de administración</h1>
+        <p>Gestiona tu tienda desde aquí.</p>
+      </div>
+
+      <section class="counter-card">
+        <div class="counter-info">
+          <h2>Recargas realizadas</h2>
+          <p>Total de recargas completadas</p>
+        </div>
+
+        <div class="counter-controls">
+          <button id="decreaseBtn" class="counter-btn">−</button>
+          <span id="counterValue">0</span>
+          <button id="increaseBtn" class="counter-btn">+</button>
+        </div>
+      </section>
+
+      <p id="counterMessage"></p>
+
+      <section class="visitors-admin">
+
+        <div class="visitor-admin-card">
+          <div class="visitor-admin-info">
+            <span>PERSONAS CONECTADAS</span>
+            <small>Usuarios conectados ahora</small>
+          </div>
+
+          <div class="visitor-admin-number">
+            <span id="adminOnlineCount">0</span>
+            <span class="online-indicator">● EN VIVO</span>
+          </div>
+        </div>
+
+        <div class="visitor-admin-card">
+          <div class="visitor-admin-info">
+            <span>VISITAS TOTALES</span>
+            <small>Total de entradas a la página</small>
+          </div>
+
+          <div class="visitor-admin-number">
+            <span id="adminTotalVisits">0</span>
+          </div>
+        </div>
+
+      </section>
+
+      <section class="prices-admin">
+
+        <div class="prices-heading">
+          <div>
+            <h2>Gestión de precios</h2>
+            <p>Modifica los precios de tus productos.</p>
+          </div>
+          <span class="prices-tag">SUPABASE</span>
+        </div>
+
+        <div id="pricesList" class="prices-list">
+          <p class="prices-message">Cargando productos...</p>
+        </div>
+
+        <p id="pricesMessage" class="prices-status" aria-live="polite"></p>
+
+      </section>
+
+      <button id="logoutBtn" class="logout-btn">
+        CERRAR SESIÓN
+      </button>
+
+    </section>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="admin.js"></script>
+
+</body>
+</html>
